@@ -79,7 +79,7 @@ void yyerror(const char *msg); // standard error-handling routine
  * of the union named "declList" which is of type List<Decl*>.
  * pp2: You'll need to add many of these of your own.
  */
-%type <declList>  DeclList
+%type <declList>  DeclP
 %type <decl>      Decl
 
 %%
@@ -89,7 +89,20 @@ void yyerror(const char *msg); // standard error-handling routine
  * %% markers which delimit the Rules section.
 
  */
-Program   :    DeclList            {
+
+/* Postfixes
+ * ---------
+ * Some of the non terminals in the grammer have one or more post fixed capital
+ * letters. These are intentional and have meaning. Each letter corresponds to
+ * the following:
+ *     P : Plus     (i.e. 'E+', One or more E)
+ *     C : Comma    (i.e. ',' , Used in Conjunction with P (PC) to denote 'E+,'
+ *                   One or more E separated by commas)
+ *     S : Star     (i.e. 'E*', Zero or more E)
+ *     O : Optional (i.e. 'E?', Zero or One E. E is optional)
+ */
+
+Program   :    DeclP                {
                                       @1;
                                       /* pp2: The @1 is needed to convince
                                        * yacc to set up yylloc. You can remove
@@ -101,14 +114,173 @@ Program   :    DeclList            {
                                     }
           ;
 
-DeclList  :    DeclList Decl        { ($$=$1)->Append($2); }
+DeclP     :    DeclP Decl           { ($$=$1)->Append($2); }
           |    Decl                 { ($$ = new List<Decl*>)->Append($1); }
           ;
 
-Decl      :    T_Void               { /* pp2: replace with correct rules  */ }
+Decl      :    VarDecl              { /* pp2: replace with correct rules */ }
+          |    FnDecl
+          |    ClassDecl
+          |    InterfaceDecl
           ;
 
+VarDecl   :    Var ';'
+          ;
 
+Var       :    Type T_Identifier
+          ;
+
+Type      :    T_Int
+          |    T_Double
+          |    T_Bool
+          |    T_String
+          |    T_Identifier
+          |    Type T_Dims
+          ;
+
+FnDecl    :    Type   T_Identifier '(' Formals ')' StmtBlock
+          |    T_Void T_Identifier '(' Formals ')' StmtBlock
+          ;
+
+VarPC     :    VarPC ',' Var
+          |    Var
+          ;
+
+Formals   :    VarPC
+          |
+          ;
+
+IdentifierPC : IdentifierPC ',' T_Identifier
+          |    T_Identifier
+          ;
+
+ExtendsO  :    T_Extends T_Identifier
+          |
+          ;
+
+ImplementsO :  T_Implements IdentifierPC
+          |
+          ;
+
+FieldS    :    FieldS Field
+          |
+          ;
+
+ClassDecl :    T_Class T_Identifier ExtendsO ImplementsO '{' FieldS '}'
+          ;
+
+Field     :    VarDecl
+          |    FnDecl
+          ;
+
+PrototypeS :   PrototypeS Prototype
+          |
+          ;
+
+InterfaceDecl : T_Interface T_Identifier '{' PrototypeS '}'
+          ;
+
+Prototype :    Type T_Identifier '(' Formals ')' ';'
+          |    T_Void T_Identifier '(' Formals ')' ';'
+          ;
+
+StmtS     :    StmtS Stmt
+          |
+          ;
+
+VarDeclS  :    VarDeclS VarDecl
+          |
+          ;
+
+StmtBlock :    '{' VarDeclS StmtS '}'
+          ;
+
+ExprO     :    Expr
+          |
+          ;
+
+Stmt      :    ExprO ';'
+          |    IfStmt
+          |    WhileStmt
+          |    ForStmt
+          |    BreakStmt
+          |    ReturnStmt
+          |    PrintStmt
+          |    StmtBlock
+          ;
+
+ElseO     :    T_Else Stmt
+          |
+          ;
+
+IfStmt    :    T_If '(' Expr ')' Stmt ElseO
+          ;
+
+WhileStmt :    T_While '(' Expr ')' Stmt
+          ;
+
+ForStmt   :    T_For '(' ExprO ';' Expr ';' ExprO ')' Stmt
+          ;
+
+ReturnStmt :   T_Return ExprO ';'
+          ;
+
+BreakStmt :    T_Break ';'
+          ;
+
+ExprPC    :    ExprPC ',' Expr
+          |    Expr
+          ;
+
+PrintStmt :    T_Print '(' ExprPC ')' ';'
+          ;
+
+Expr      :    LValue '=' Expr
+          |    Constant
+          |    LValue
+          |    T_This
+          |    Call
+          |    '(' Expr ')'
+          |    Expr '+' Expr
+          |    Expr '-' Expr
+          |    Expr '*' Expr
+          |    Expr '/' Expr
+          |    Expr '%' Expr
+          |    '-' Expr
+          |    Expr '<' Expr
+          |    Expr T_LessEqual Expr
+          |    Expr '>' Expr
+          |    Expr T_GreaterEqual Expr
+          |    Expr T_Equal Expr
+          |    Expr T_NotEqual Expr
+          |    Expr T_And Expr
+          |    Expr T_Or Expr
+          |    '!' Expr
+          |    T_ReadInteger '()'
+          |    T_ReadLine '()'
+          |    T_New T_Identifier
+          |    T_NewArray '(' Expr ',' Type ')'
+          ;
+
+LValue    :    T_Identifier
+          |    Expr '.' T_Identifier
+          |    Expr '[' Expr ']'
+          ;
+
+Call      :    T_Identifier '(' Actuals ')'
+          |    Expr '.' T_Identifier '(' Actuals ')'
+          ;
+
+Actuals   :    ExprPC
+          |
+          ;
+
+Constant  :    T_IntConstant
+          |    T_DoubleConstant
+          |    T_BoolConstant
+          |    T_StringConstant
+          |    T_Null
+          ;
 
 %%
 
