@@ -82,6 +82,12 @@ void yyerror(const char *msg); // standard error-handling routine
 %type <declList>  DeclP
 %type <decl>      Decl
 
+/* Associate the 'else' porition of if statements with the nearest (innermost)
+ * 'if' porition.
+ */
+%nonassoc NoElse
+%nonassoc T_Else
+
 %right '='
 %left  T_Or
 %left  T_And
@@ -229,8 +235,8 @@ Stmt      :    ExprO ';'
           |    StmtBlock
           ;
 
-ElseO     :    T_Else Stmt
-          |
+ElseO     :    T_Else Stmt %prec T_Else
+          |                %prec NoElse
           ;
 
 IfStmt    :    T_If '(' Expr ')' Stmt ElseO
