@@ -82,6 +82,26 @@ void yyerror(const char *msg); // standard error-handling routine
 %type <declList>  DeclP
 %type <decl>      Decl
 
+%right '='
+%left  T_Or
+%left  T_And
+%left  T_Equal
+%left  T_NotEqual
+%left  '<'
+%left  T_LessEqual
+%left  '>'
+%left  T_GreaterEqual
+%left  '-'
+%left  '+'
+%left  '/'
+%left  '%'
+%left  '*'
+%right '!'
+%left  '.'
+%left  '['
+%left  ']'
+%left  T_Dims
+
 %%
 /* Rules
  * -----
