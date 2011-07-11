@@ -351,7 +351,7 @@ ForStmt   :    T_For '(' ExprO ';' Expr ';' ExprO ')' Stmt {
                                     }
           ;
 
-ReturnStmt :   T_Return ExprO ';'   { $$ = new ReturnStmt(@2, $2); }
+ReturnStmt :   T_Return ExprO ';'   { $$ = new ReturnStmt(@1, $2); }
           ;
 
 BreakStmt :    T_Break ';'          { $$ = new BreakStmt(@1); }
