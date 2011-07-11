@@ -7,7 +7,6 @@
  *      accept the language as described in specification, and as augmented
  *      in the pp2 handout.
  */
-
 %{
 
 /* Just like lex, the text within this first region delimited by %{ and %}
@@ -210,15 +209,18 @@ Prototype :    Type T_Identifier '(' Formals ')' ';'
           |    T_Void T_Identifier '(' Formals ')' ';'
           ;
 
-StmtS     :    StmtS Stmt
-          |
+StmtP     :    StmtP Stmt
+          |    Stmt
           ;
 
-VarDeclS  :    VarDeclS VarDecl
-          |
+VarDeclP  :    VarDeclP VarDecl
+          |    VarDecl
           ;
 
-StmtBlock :    '{' VarDeclS StmtS '}'
+StmtBlock :    '{' VarDeclP StmtP '}'
+          |    '{' VarDeclP '}'
+          |    '{' StmtP '}'
+          |    '{' '}'
           ;
 
 ExprO     :    Expr
