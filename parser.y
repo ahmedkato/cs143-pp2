@@ -422,8 +422,8 @@ Expr      :    LValue '=' Expr      { Operator *op = new Operator(@2, "=");
           |    '!' Expr             { Operator *op = new Operator(@1, "!");
                                       $$ = new LogicalExpr(op, $2);
                                     }
-          |    T_ReadInteger '()'   { $$ = new ReadIntegerExpr(@1); }
-          |    T_ReadLine '()'      { $$ = new ReadLineExpr(@1); }
+          |    T_ReadInteger '(' ')'   { $$ = new ReadIntegerExpr(@1); }
+          |    T_ReadLine '(' ')'      { $$ = new ReadLineExpr(@1); }
           |    T_New T_Identifier   { Identifier *id = new Identifier(@2, $2);
                                       NamedType *nt = new NamedType(id);
                                       $$ = new NewExpr(@1, nt);
