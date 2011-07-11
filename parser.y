@@ -81,6 +81,7 @@ void yyerror(const char *msg); // standard error-handling routine
 %token   T_And T_Or T_Null T_Extends T_This T_Interface T_Implements
 %token   T_While T_For T_If T_Else T_Return T_Break
 %token   T_New T_NewArray T_Print T_ReadInteger T_ReadLine
+%token   T_Increment T_Decrement
 
 %token   <identifier> T_Identifier
 %token   <stringConstant> T_StringConstant
@@ -161,6 +162,8 @@ void yyerror(const char *msg); // standard error-handling routine
 %left  '['
 %left  ']'
 %left  T_Dims
+%left  T_Increment
+%left  T_Decrement
 
 %%
 /* Rules
@@ -366,6 +369,12 @@ PrintStmt :    T_Print '(' ExprPC ')' ';' { $$ = new PrintStmt($3); }
 
 Expr      :    LValue '=' Expr      { Operator *op = new Operator(@2, "=");
                                       $$ = new AssignExpr($1, op, $3);
+                                    }
+          |    LValue T_Increment   { Operator *op = new Operator(@2, "++");
+                                      $$ = new PostfixExpr($1, op);
+                                    }
+          |    LValue T_Decrement   { Operator *op = new Operator(@2, "--");
+                                      $$ = new PostfixExpr($1, op);
                                     }
           |    Constant             { $$ = $1; }
           |    LValue               { $$ = $1; }
