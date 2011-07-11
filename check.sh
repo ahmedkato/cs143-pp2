@@ -2,7 +2,16 @@
 
 [ -x dcc ] || { echo "Error: dcc not executable"; exit 1; }
 
-for file in `ls samples/*.out`; do
+LIST=
+if [ "$#" = "0" ]; then
+	LIST=`ls samples/*.out`
+else
+	for test in "$@"; do
+		LIST="$LIST samples/$test.out"
+	done
+fi
+
+for file in $LIST; do
 	base=`echo $file | sed 's/\(.*\)\.out/\1/'`
 
 	ext=''
