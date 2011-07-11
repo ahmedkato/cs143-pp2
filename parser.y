@@ -296,7 +296,8 @@ Prototype :    Type T_Identifier '(' Formals ')' ';' {
                                     }
           |    T_Void T_Identifier '(' Formals ')' ';' {
                                       Identifier *id = new Identifier(@2, $2);
-                                      $$ = new FnDecl(id, NULL, $4);
+                                      Type *tp = new Type(*Type::voidType);
+                                      $$ = new FnDecl(id, tp, $4);
                                     }
           ;
 
