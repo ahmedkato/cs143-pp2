@@ -66,6 +66,10 @@ void yyerror(const char *msg); // standard error-handling routine
     ReturnStmt *returnStmt;
     BreakStmt *breakStmt;
     PrintStmt *printStmt;
+    Case *caseStmt;
+    List<Case*> *caseList;
+    Default *defaultStmt;
+    SwitchStmt *switchStmt;
     LValue *lvalue;
 }
 
@@ -81,7 +85,7 @@ void yyerror(const char *msg); // standard error-handling routine
 %token   T_And T_Or T_Null T_Extends T_This T_Interface T_Implements
 %token   T_While T_For T_If T_Else T_Return T_Break
 %token   T_New T_NewArray T_Print T_ReadInteger T_ReadLine
-%token   T_Increment T_Decrement
+%token   T_Increment T_Decrement T_Switch T_Case T_Default
 
 %token   <identifier> T_Identifier
 %token   <stringConstant> T_StringConstant
@@ -132,6 +136,12 @@ void yyerror(const char *msg); // standard error-handling routine
 %type <breakStmt> BreakStmt
 %type <exprList>  ExprPC
 %type <printStmt> PrintStmt
+%type <stmtList>  StmtS
+%type <caseStmt>  Case
+%type <caseList>  CaseP
+%type <defaultStmt> Default
+%type <defaultStmt> DefaultO
+%type <switchStmt> SwitchStmt
 %type <lvalue>    LValue
 %type <exprList>  Actuals
 %type <expr>      Call
@@ -336,6 +346,7 @@ Stmt      :    ExprO ';'            { $$ = $1; }
           |    BreakStmt            { $$ = $1; }
           |    ReturnStmt           { $$ = $1; }
           |    PrintStmt            { $$ = $1; }
+          |    SwitchStmt           { $$ = $1; }
           |    StmtBlock            { $$ = $1; }
           ;
 
@@ -365,6 +376,32 @@ ExprPC    :    ExprPC ',' Expr      { ($$ = $1)->Append($3); }
           ;
 
 PrintStmt :    T_Print '(' ExprPC ')' ';' { $$ = new PrintStmt($3); }
+          ;
+
+StmtS     :    StmtS Stmt           { ($$ = $1)->Append($2); }
+          |                         { $$ = new List<Stmt*>; }
+          ;
+
+Case      :    T_Case T_IntConstant ':' StmtS {
+                                      IntConstant *i = new IntConstant(@2, $2);
+                                      $$ = new Case(i, $4);
+                                    }
+          ;
+
+CaseP     :    CaseP Case           { ($$ = $1)->Append($2); }
+          |    Case                 { ($$ = new List<Case*>)->Append($1); }
+          ;
+
+Default   :    T_Default ':' StmtS  { $$ = new Default($3); }
+          ;
+
+DefaultO  :    Default              { $$ = $1; }
+          |                         { $$ = NULL; }
+          ;
+
+SwitchStmt :   T_Switch '(' Expr ')' '{' CaseP DefaultO '}' {
+                                      $$ = new SwitchStmt($3, $6, $7);
+                                    }
           ;
 
 Expr      :    LValue '=' Expr      { Operator *op = new Operator(@2, "=");
