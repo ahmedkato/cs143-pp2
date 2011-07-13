@@ -88,4 +88,11 @@ class FnDecl : public Decl
     void PrintChildren(int indentLevel);
 };
 
+class FormalsError : public FnDecl
+{
+  public:
+    FormalsError() : FnDecl() { yyerror(this->GetPrintNameForNode()); }
+    const char *GetPrintNameForNode() { return "FormalsError"; }
+};
+
 #endif
