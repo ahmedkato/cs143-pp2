@@ -218,6 +218,7 @@ Decl      :    VarDecl              { $$ = $1; }
           ;
 
 VarDecl   :    Var ';'              { $$ = $1; }
+          |    Var error ';'        { $$ = new VarDeclError(); }
           ;
 
 Var       :    Type T_Identifier    { Identifier *id = new Identifier(@2, $2);
