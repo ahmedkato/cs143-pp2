@@ -220,6 +220,13 @@ class Call : public Expr
     void PrintChildren(int indentLevel);
 };
 
+class ActualsError : public Call
+{
+  public:
+    ActualsError() : Call() { yyerror(this->GetPrintNameForNode()); }
+    const char *GetPrintNameForNode() { return "ActualsError"; }
+};
+
 class NewExpr : public Expr
 {
   protected:
