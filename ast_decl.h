@@ -17,6 +17,8 @@ class NamedType;
 class Identifier;
 class Stmt;
 
+void yyerror(const char *msg);
+
 class Decl : public Node 
 {
   protected:
@@ -37,6 +39,13 @@ class VarDecl : public Decl
     VarDecl(Identifier *name, Type *type);
     const char *GetPrintNameForNode() { return "VarDecl"; }
     void PrintChildren(int indentLevel);
+};
+
+class VarDeclError : public VarDecl
+{
+  public:
+    VarDeclError() : VarDecl() { yyerror(this->GetPrintNameForNode()); };
+    const char *GetPrintNameForNode() { return "VarDeclError"; }
 };
 
 class ClassDecl : public Decl 
