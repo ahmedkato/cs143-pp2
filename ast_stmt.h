@@ -103,6 +103,13 @@ class IfStmt : public ConditionalStmt
     void PrintChildren(int indentLevel);
 };
 
+class IfStmtExprError : public IfStmt
+{
+  public:
+    IfStmtExprError() : IfStmt() { yyerror(this->GetPrintNameForNode()); }
+    const char *GetPrintNameForNode() { return "IfStmtExprError"; }
+};
+
 class BreakStmt : public Stmt 
 {
   public:
