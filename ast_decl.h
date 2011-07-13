@@ -23,6 +23,7 @@ class Decl : public Node
     Identifier *id;
   
   public:
+    Decl() : id(NULL) {}
     Decl(Identifier *name);
 };
 
