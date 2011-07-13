@@ -240,11 +240,17 @@ FnDecl    :    Type   T_Identifier '(' Formals ')' StmtBlock {
                                       $$ = new FnDecl(id, $1, $4);
                                       $$->SetFunctionBody($6);
                                     }
+          |    Type   T_Identifier '(' error ')' StmtBlock {
+                                      $$ = new FormalsError();
+                                    }
           |    T_Void T_Identifier '(' Formals ')' StmtBlock {
                                       Identifier *id = new Identifier(@2, $2);
                                       Type *tp = new Type(*Type::voidType);
                                       $$ = new FnDecl(id, tp, $4);
                                       $$->SetFunctionBody($6);
+                                    }
+          |    T_Void T_Identifier '(' error ')' StmtBlock {
+                                      $$ = new FormalsError();
                                     }
           ;
 
@@ -308,10 +314,16 @@ Prototype :    Type T_Identifier '(' Formals ')' ';' {
                                       Identifier *id = new Identifier(@2, $2);
                                       $$ = new FnDecl(id, $1, $4);
                                     }
+          |    Type T_Identifier '(' error ')' ';' {
+                                      $$ = new FormalsError();
+                                    }
           |    T_Void T_Identifier '(' Formals ')' ';' {
                                       Identifier *id = new Identifier(@2, $2);
                                       Type *tp = new Type(*Type::voidType);
                                       $$ = new FnDecl(id, tp, $4);
+                                    }
+          |    T_Void T_Identifier '(' error ')' ';' {
+                                      $$ = new FormalsError();
                                     }
           ;
 
