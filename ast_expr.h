@@ -17,12 +17,20 @@
 class NamedType; // for new
 class Type; // for NewArray
 
+void yyerror(const char *msg);
 
 class Expr : public Stmt 
 {
   public:
     Expr(yyltype loc) : Stmt(loc) {}
     Expr() : Stmt() {}
+};
+
+class ExprError : public Expr
+{
+  public:
+    ExprError() : Expr() { yyerror(this->GetPrintNameForNode()); }
+    const char *GetPrintNameForNode() { return "ExprError"; }
 };
 
 /* This node type is used for those places where an expression is optional.
