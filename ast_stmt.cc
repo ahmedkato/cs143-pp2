@@ -110,8 +110,8 @@ SwitchStmt::SwitchStmt(Expr *e, List<Case*> *c, Default *d) {
 }
 
 void SwitchStmt::PrintChildren(int indentLevel) {
-    expr->Print(indentLevel+1);
-    cases->PrintAll(indentLevel+1);
+    if (expr) expr->Print(indentLevel+1);
+    if (cases) cases->PrintAll(indentLevel+1);
     if (def) def->Print(indentLevel+1);
 }
 
