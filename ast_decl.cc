@@ -62,9 +62,9 @@ void FnDecl::SetFunctionBody(Stmt *b) {
 }
 
 void FnDecl::PrintChildren(int indentLevel) {
-    returnType->Print(indentLevel+1, "(return type) ");
-    id->Print(indentLevel+1);
-    formals->PrintAll(indentLevel+1, "(formals) ");
+    if (returnType) returnType->Print(indentLevel+1, "(return type) ");
+    if (id) id->Print(indentLevel+1);
+    if (formals) formals->PrintAll(indentLevel+1, "(formals) ");
     if (body) body->Print(indentLevel+1, "(body) ");
 }
 
