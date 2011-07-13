@@ -61,6 +61,7 @@ class ConditionalStmt : public Stmt
     Stmt *body;
   
   public:
+    ConditionalStmt() : Stmt(), test(NULL), body(NULL) {}
     ConditionalStmt(Expr *testExpr, Stmt *body);
 };
 
