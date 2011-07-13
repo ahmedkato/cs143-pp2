@@ -21,6 +21,8 @@ class VarDecl;
 class Expr;
 class IntConstant;
   
+void yyerror(const char *msg);
+
 class Program : public Node
 {
   protected:
@@ -168,6 +170,13 @@ class SwitchStmt : public Stmt
     SwitchStmt(Expr *expr, List<Case*> *cases, Default *def);
     virtual const char *GetPrintNameForNode() { return "SwitchStmt"; }
     void PrintChildren(int indentLevel);
+};
+
+class SwitchStmtError : public SwitchStmt
+{
+  public:
+    SwitchStmtError(const char * msg) { yyerror(msg); }
+    const char *GetPrintNameForNode() { return "SwitchStmtError"; }
 };
 
 #endif
