@@ -60,8 +60,8 @@ IfStmt::IfStmt(Expr *t, Stmt *tb, Stmt *eb): ConditionalStmt(t, tb) {
 }
 
 void IfStmt::PrintChildren(int indentLevel) {
-    test->Print(indentLevel+1, "(test) ");
-    body->Print(indentLevel+1, "(then) ");
+    if (test) test->Print(indentLevel+1, "(test) ");
+    if (body) body->Print(indentLevel+1, "(then) ");
     if (elseBody) elseBody->Print(indentLevel+1, "(else) ");
 }
 

@@ -97,6 +97,7 @@ class IfStmt : public ConditionalStmt
     Stmt *elseBody;
   
   public:
+    IfStmt() : ConditionalStmt(), elseBody(NULL) {}
     IfStmt(Expr *test, Stmt *thenBody, Stmt *elseBody);
     const char *GetPrintNameForNode() { return "IfStmt"; }
     void PrintChildren(int indentLevel);
