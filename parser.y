@@ -341,6 +341,7 @@ ExprO     :    Expr                 { $$ = $1; }
           ;
 
 Stmt      :    ExprO ';'            { $$ = $1; }
+          |    Expr error ';'       { $$ = new ExprError(); }
           |    IfStmt               { $$ = $1; }
           |    WhileStmt            { $$ = $1; }
           |    ForStmt              { $$ = $1; }
