@@ -507,9 +507,15 @@ Call      :    T_Identifier '(' Actuals ')' {
                                       Identifier *id = new Identifier(@1, $1);
                                       $$ = new Call(@1, NULL, id, $3);
                                     }
+          |    T_Identifier '(' error ')' {
+                                      $$ = new ActualsError();
+                                    }
           |    Expr '.' T_Identifier '(' Actuals ')' {
                                       Identifier *id = new Identifier(@3, $3);
                                       $$ = new Call(@2, $1, id, $5);
+                                    }
+          |    Expr '.' T_Identifier '(' error ')' {
+                                      $$ = new ActualsError();
                                     }
           ;
 
