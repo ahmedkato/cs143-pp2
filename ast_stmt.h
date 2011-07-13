@@ -144,6 +144,7 @@ class SwitchLabel : public Stmt
 class Case : public SwitchLabel
 {
   public:
+    Case() : SwitchLabel() {}
     Case(IntConstant *label, List<Stmt*> *stmts) : SwitchLabel(label, stmts) {}
     const char *GetPrintNameForNode() { return "Case"; }
 };
