@@ -135,6 +135,7 @@ class SwitchLabel : public Stmt
     List<Stmt*> *stmts;
 
   public:
+    SwitchLabel() { label = NULL; stmts = NULL; }
     SwitchLabel(IntConstant *label, List<Stmt*> *stmts);
     SwitchLabel(List<Stmt*> *stmts);
     void PrintChildren(int indentLevel);

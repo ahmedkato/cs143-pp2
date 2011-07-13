@@ -98,7 +98,7 @@ SwitchLabel::SwitchLabel(List<Stmt*> *s) {
 
 void SwitchLabel::PrintChildren(int indentLevel) {
     if (label) label->Print(indentLevel+1);
-    stmts->PrintAll(indentLevel+1);
+    if (stmts) stmts->PrintAll(indentLevel+1);
 }
 
 SwitchStmt::SwitchStmt(Expr *e, List<Case*> *c, Default *d) {
