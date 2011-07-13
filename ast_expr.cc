@@ -111,8 +111,8 @@ Call::Call(yyltype loc, Expr *b, Identifier *f, List<Expr*> *a) : Expr(loc)  {
 
  void Call::PrintChildren(int indentLevel) {
     if (base) base->Print(indentLevel+1);
-    field->Print(indentLevel+1);
-    actuals->PrintAll(indentLevel+1, "(actuals) ");
+    if (field) field->Print(indentLevel+1);
+    if (actuals) actuals->PrintAll(indentLevel+1, "(actuals) ");
   }
  
 
