@@ -369,6 +369,7 @@ ElseO     :    T_Else Stmt %prec T_Else { $$ = $2; }
           ;
 
 IfStmt    :    T_If '(' Expr ')' Stmt ElseO { $$ = new IfStmt($3, $5, $6); }
+          |    T_If '(' error ')' Stmt ElseO { $$ = new IfStmtExprError(); }
           ;
 
 WhileStmt :    T_While '(' Expr ')' Stmt { $$ = new WhileStmt($3, $5); }
