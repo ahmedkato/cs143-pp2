@@ -1,0 +1,104 @@
+************************************
+* CS 143 - Compilers - Summer 2011 *
+************************************
+
+Programming Project 2: Syntax Analysis
+--------------------------------------
+
+Homepage: http://github.com/dunecn/cs143-pp2
+
+Author: Prakash Surya <surya1@llnl.gov>
+
+Goal:
+
+This time around you'll extend your Decaf compiler (at this point it's nothing
+more than a lexer) to handle the syntax analysis phase, the second task of the
+frontend, by using bison to create a parser. The parser will read Decaf source
+programs and construct a parse tree. If no syntax errors are encountered, your
+code will print the completed parse tree as flat text. At this stage, you
+aren't responsible for verifying meaning, just structure. The purpose of this
+project is to familiarize you with the tools and give you experience in solving
+typical problems one encounters when using them to generate a parser.
+
+Error Recovery:
+
+As part of the assignment, some form of error recovery was explored and
+implemented in the parser. The forms of error recovery that I chose to exploit
+deal with variable declaration errors, generic expression errors, function
+declaration formals errors, function call actuals errors, and if statement
+expression errors.
+
+Error Recovery Samples:
+
+The following sample files illustrate the error recovery features implemented:
+
+ * bad1.decaf:
+    * function declaration formals errors
+ * bad2.decaf:
+    * variable declaration errors
+ * bad5.decaf:
+    * variable declaration errors
+    * generic expression errors
+ * bad7.decaf
+    * generic expression errors
+    * function call actuals errors
+ * ifstmtexprerror.decaf
+    * if statement expression errors
+ * rvaluedecr.decaf
+    * generic expression errors
+ * rvalueincr.decaf
+    * generic expression errors
+ * stmtbad1.decaf
+    * variable declaration errors
+
+Building:
+
+To build the parser, the following are known dependences: make, flex, bison,
+and gcc. Once those dependencies are properly installed, simply type 'make'
+from within the top level directory. This should output the 'dcc' executable,
+this is the parser.
+
+Usage:
+
+The parser reads input from stdin, and outputs to stdout and stderr. Thus, it
+can be run interactively simply by executing the parser:
+
+        $ ./dcc
+
+In this mode, dcc will read in the text typed into the terminal and parse it
+as each newline is typed on the fly. To exit while in this mode, input the EOF
+character (Ctrl+D on most systems). Alternatively, a file can be redirected
+into the program using standard shell redirection syntax:
+
+        $ ./dcc < main.decaf
+
+In this mode, dcc will read in the file and parse it line by line. In both
+of these modes, dcc will send normal output to stdout and error messages to
+stderr.
+
+Regression Testing:
+
+As active development continues, it is important to ensure the parser
+maintains it's proper behavior. Thus, the check.sh script, in conjunction with
+test cases within the samples directory can be used. To run the regression
+suite, simply execute the shell script:
+
+        $ ./check.sh
+
+This will try to execute the full regression suite contained in the samples
+directory, and output whether dcc passed or failed a specific test. On failure,
+a diff of the actual output with the expected output will also be displayed.
+
+When adding new regression test cases, make sure two files are created for each
+test case and are added to the samples directory. The input file fed to dcc
+should have a file extension of either 'decaf' or 'frag', and the expected
+output file should have a file extension of 'out'. Also, the input file and
+expected output file for each test need to have a common base filename. Please
+see the existing test cases contained in the samples directory if more
+clarification is needed.
+
+Since, part of the assignment is to extend the parser to perform some error
+recovery and add custom error messages, the invalid programs in the regression
+test suite may not pass. This is expected. The regression suite is the expected
+output of the program without any error recovery, thus, some tests will likely
+fail with error recovery installed and enabled.
